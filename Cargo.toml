@@ -5,6 +5,7 @@ edition = "2021"
 authors = ["Daniel Mueller <deso@posteo.net>"]
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/d-e-s-o/xgl.git"
+documentation = "https://docs.rs/xgl"
 categories = [
   "external-ffi-bindings",
   "graphics",
