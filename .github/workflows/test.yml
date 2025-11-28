@@ -65,7 +65,7 @@ jobs:
         with:
           components: rustfmt
       - run: cargo +nightly fmt -- --check
-  cargo-doc:
+  rustdoc:
     name: Generate documentation
     runs-on: ubuntu-latest
     env:
