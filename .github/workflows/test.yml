@@ -45,6 +45,14 @@ jobs:
       with:
         target: wasm32-unknown-unknown
     - run: cargo build --target=wasm32-unknown-unknown --workspace
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: sudo apt-get install --yes --no-install-recommends libgl-dev
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test
   clippy:
     name: Lint with clippy
     runs-on: ubuntu-latest
