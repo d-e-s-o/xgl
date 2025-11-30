@@ -7,6 +7,7 @@ mod opengl;
 mod program;
 mod shader;
 mod stack;
+mod texture;
 #[cfg(target_arch = "wasm32")]
 mod webgl;
 #[cfg(test)]
@@ -22,3 +23,6 @@ pub mod sys {
 pub use matrices::MatrixStack;
 pub use program::Program;
 pub use shader::Shader;
+pub use texture::Builder as TextureBuilder;
+pub use texture::Texture;
+pub use texture::TextureInfo;
