@@ -6,7 +6,9 @@ mod opengl;
 #[cfg(target_arch = "wasm32")]
 mod webgl;
 
-#[cfg(not(target_arch = "wasm32"))]
-pub use crate::opengl::*;
-#[cfg(target_arch = "wasm32")]
-pub use crate::webgl::*;
+pub mod sys {
+  #[cfg(not(target_arch = "wasm32"))]
+  pub use crate::opengl::*;
+  #[cfg(target_arch = "wasm32")]
+  pub use crate::webgl::*;
+}

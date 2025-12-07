@@ -6,6 +6,7 @@ xgl
 ===
 
 - [Documentation][docs-rs]
+- [Changelog](CHANGELOG.md)
 
 Unified minimalist OpenGL 3.3 & WebGL abstractions.
 
