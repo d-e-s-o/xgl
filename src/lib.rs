@@ -4,9 +4,13 @@
 mod matrices;
 #[cfg(not(target_arch = "wasm32"))]
 mod opengl;
+mod program;
+mod shader;
 mod stack;
 #[cfg(target_arch = "wasm32")]
 mod webgl;
+#[cfg(test)]
+mod winit;
 
 pub mod sys {
   #[cfg(not(target_arch = "wasm32"))]
@@ -16,3 +20,5 @@ pub mod sys {
 }
 
 pub use crate::matrices::MatrixStack;
+pub use crate::program::Program;
+pub use crate::shader::Shader;

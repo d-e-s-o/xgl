@@ -21,6 +21,9 @@ description = """
 Unified minimalist OpenGL 3.3 & WebGL abstractions.
 """
 
+[dependencies]
+anyhow = "1.0"
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = {version = "0.2", default-features = false, features = ["std"]}
 web-sys = {version = "0.3", default-features = false, features=[
@@ -33,6 +36,11 @@ web-sys = {version = "0.3", default-features = false, features=[
   "WebGlUniformLocation",
   "WebGlVertexArrayObject",
 ]}
+
+[dev-dependencies]
+glutin = {version = "0.32", default-features = false, features = ["glx", "x11"]}
+test-fork = "0.1"
+winit = {version = "0.30", default-features = false, features = ["rwh_06", "x11"]}
 
 [lints.rust]
 deprecated-safe = "warn"
