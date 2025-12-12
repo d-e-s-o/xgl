@@ -1,6 +1,7 @@
 // Copyright (C) 2025 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+mod framebuffer;
 mod matrices;
 #[cfg(not(target_arch = "wasm32"))]
 mod opengl;
@@ -21,6 +22,7 @@ pub mod sys {
   pub use crate::webgl::*;
 }
 
+pub use crate::framebuffer::Framebuffer;
 pub use crate::matrices::MatrixStack;
 pub use crate::program::Program;
 pub use crate::shader::Shader;
