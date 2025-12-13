@@ -84,15 +84,23 @@ fn populate_3d_texture(
 
 
 /// Builder infrastructure for a texture.
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct Builder<C = ()> {
   /// The OpenGL context.
   context: C,
+  /// The texture wrap setting to use.
+  wrap: sys::TextureWrap,
   /// Whether or not to create mipmaps.
   mipmaps: bool,
 }
 
 impl Builder<()> {
+  /// Set the wrap mode for the to-be-created texture.
+  pub fn set_wrap_mode(mut self, wrap: sys::TextureWrap) -> Self {
+    self.wrap = wrap;
+    self
+  }
+
   /// Set whether or not to use mipmaps for the texture.
   pub fn set_mipmaps(mut self, mipmaps: bool) -> Self {
     self.mipmaps = mipmaps;
@@ -103,11 +111,13 @@ impl Builder<()> {
   pub fn set_context(self, context: &sys::Context) -> Builder<sys::Context> {
     let Self {
       context: (),
+      wrap,
       mipmaps,
     } = self;
 
     Builder {
       context: context.clone(),
+      wrap,
       mipmaps,
     }
   }
@@ -124,6 +134,7 @@ impl Builder<sys::Context> {
   fn apply_pre_texture_state(&self, texture: &Texture) {
     let Self {
       context: _,
+      wrap,
       mipmaps,
     } = self;
     let target = texture.target();
@@ -141,9 +152,7 @@ impl Builder<sys::Context> {
     let () = self
       .context
       .set_texture_filter(target, sys::TextureFilterType::Minimize, filter);
-    let () = self
-      .context
-      .set_texture_wrap(target, sys::TextureWrap::ClampToEdge);
+    let () = self.context.set_texture_wrap(target, *wrap);
 
     // TODO: Probably not the full story.
     let () = self.context.set_pixel_unpack_alignment(1);
@@ -154,6 +163,7 @@ impl Builder<sys::Context> {
   fn apply_post_texture_state(&self, texture: &Texture) {
     let Self {
       context: _,
+      wrap: _,
       mipmaps,
     } = self;
     let target = texture.target();
@@ -293,6 +303,22 @@ impl Builder<sys::Context> {
     let () = result?;
 
     Ok(texture)
+  }
+}
+
+/// Instantiate a "default" [`Builder`].
+///
+/// The defaults are as follows:
+/// - wrap mode: [`Repeat`][sys::TextureWrap::Repeat]
+/// - mipmaps: `false`
+impl Default for Builder<()> {
+  #[inline]
+  fn default() -> Self {
+    Self {
+      context: (),
+      wrap: sys::TextureWrap::Repeat,
+      mipmaps: false,
+    }
   }
 }
 

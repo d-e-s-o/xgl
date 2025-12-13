@@ -215,6 +215,7 @@ pub enum TextureCompareMode {
 #[derive(Clone, Copy, Debug)]
 pub enum TextureWrap {
   ClampToEdge = gl::CLAMP_TO_EDGE,
+  Repeat = gl::REPEAT,
 }
 
 #[repr(u32)]

@@ -213,6 +213,7 @@ pub enum TextureCompareMode {
 #[derive(Clone, Copy, Debug)]
 pub enum TextureWrap {
   ClampToEdge = WebGl2RenderingContext::CLAMP_TO_EDGE,
+  Repeat = WebGl2RenderingContext::REPEAT,
 }
 
 #[repr(u32)]
