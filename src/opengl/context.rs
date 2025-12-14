@@ -104,6 +104,7 @@ pub enum CullFace {
 #[repr(u32)]
 #[derive(Clone, Copy, Debug)]
 pub enum DrawType {
+  Lines = gl::LINES,
   Triangles = gl::TRIANGLES,
   TriangleFan = gl::TRIANGLE_FAN,
   TriangleStrip = gl::TRIANGLE_STRIP,

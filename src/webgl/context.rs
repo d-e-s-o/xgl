@@ -102,6 +102,7 @@ pub enum CullFace {
 #[repr(u32)]
 #[derive(Clone, Copy, Debug)]
 pub enum DrawType {
+  Lines = WebGl2RenderingContext::LINES,
   Triangles = WebGl2RenderingContext::TRIANGLES,
   TriangleFan = WebGl2RenderingContext::TRIANGLE_FAN,
   TriangleStrip = WebGl2RenderingContext::TRIANGLE_STRIP,
