@@ -240,11 +240,11 @@ mod private {
   impl Sealed for u16 {}
 }
 
-pub trait PrimitiveTy: private::Sealed {
+pub trait BuiltinType: private::Sealed {
   fn as_type() -> Type;
 }
 
-impl PrimitiveTy for u16 {
+impl BuiltinType for u16 {
   fn as_type() -> Type {
     Type::UnsignedShort
   }
@@ -343,7 +343,7 @@ impl Context {
   #[inline]
   pub fn draw_elements<T>(&self, ty: DrawType, count: i32)
   where
-    T: PrimitiveTy,
+    T: BuiltinType,
   {
     let () = unsafe { gl::DrawElements(ty as _, count, T::as_type() as _, null_mut()) };
     debug_assert_eq!(self.error(), Ok(()));

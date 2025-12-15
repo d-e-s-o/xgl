@@ -7,6 +7,7 @@ Unreleased
 - Introduced `VertexArray` and `VertexBuffer` types and associated
   functionality
 - Introduced `Framebuffer` type
+- Renamed `PrimitiveTy` trait to `BuiltinType`
 
 
 0.1.0
