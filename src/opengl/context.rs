@@ -103,7 +103,7 @@ pub enum CullFace {
 
 #[repr(u32)]
 #[derive(Clone, Copy, Debug)]
-pub enum DrawType {
+pub enum Primitive {
   Lines = gl::LINES,
   Triangles = gl::TRIANGLES,
   TriangleFan = gl::TRIANGLE_FAN,
@@ -329,23 +329,23 @@ impl Context {
   }
 
   #[inline]
-  pub fn draw_arrays(&self, ty: DrawType, count: i32) {
-    let () = unsafe { gl::DrawArrays(ty as _, 0, count) };
+  pub fn draw_arrays(&self, primitive: Primitive, count: i32) {
+    let () = unsafe { gl::DrawArrays(primitive as _, 0, count) };
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn draw_arrays_instanced(&self, ty: DrawType, count: i32, instance_count: i32) {
-    let () = unsafe { gl::DrawArraysInstanced(ty as _, 0, count, instance_count) };
+  pub fn draw_arrays_instanced(&self, primitive: Primitive, count: i32, instance_count: i32) {
+    let () = unsafe { gl::DrawArraysInstanced(primitive as _, 0, count, instance_count) };
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn draw_elements<T>(&self, ty: DrawType, count: i32)
+  pub fn draw_elements<T>(&self, primitive: Primitive, count: i32)
   where
     T: BuiltinType,
   {
-    let () = unsafe { gl::DrawElements(ty as _, count, T::as_type() as _, null_mut()) };
+    let () = unsafe { gl::DrawElements(primitive as _, count, T::as_type() as _, null_mut()) };
     debug_assert_eq!(self.error(), Ok(()));
   }
 

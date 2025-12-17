@@ -8,6 +8,7 @@ Unreleased
   functionality
 - Introduced `Framebuffer` type
 - Renamed `PrimitiveTy` trait to `BuiltinType`
+- Renamed `DrawType` enum to `Primitive`
 
 
 0.1.0
