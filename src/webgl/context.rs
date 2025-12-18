@@ -100,7 +100,7 @@ pub enum CullFace {
 
 
 #[repr(u32)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Primitive {
   Lines = WebGl2RenderingContext::LINES,
   Triangles = WebGl2RenderingContext::TRIANGLES,

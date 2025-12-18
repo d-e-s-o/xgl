@@ -102,7 +102,7 @@ pub enum CullFace {
 
 
 #[repr(u32)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Primitive {
   Lines = gl::LINES,
   Triangles = gl::TRIANGLES,
