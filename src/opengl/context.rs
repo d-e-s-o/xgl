@@ -38,12 +38,26 @@ pub struct VertexBufferObject(u32);
 pub struct UniformLocation(i32);
 
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Eq, PartialEq)]
 pub struct Error(u32);
+
+impl Debug for Error {
+  fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+    Display::fmt(self, f)
+  }
+}
 
 impl Display for Error {
   fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-    write!(f, "OpenGL error: {:#x}", self.0)
+    let err = match self.0 {
+      gl::INVALID_ENUM => "invalid enum",
+      gl::INVALID_VALUE => "invalid value",
+      gl::INVALID_OPERATION => "invalid operation",
+      gl::OUT_OF_MEMORY => "out of memory",
+      gl::INVALID_FRAMEBUFFER_OPERATION => "invalid framebuffer operation",
+      _ => return write!(f, "OpenGL error: {:#x}", self.0),
+    };
+    write!(f, "OpenGL error: {err} ({:#x})", self.0)
   }
 }
 
@@ -867,5 +881,25 @@ impl Context {
   pub fn generate_mipmaps(&self, target: TextureTarget) {
     let () = unsafe { gl::GenerateMipmap(target as _) };
     debug_assert_eq!(self.error(), Ok(()));
+  }
+}
+
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+
+  /// Check that the `Debug` impl for the [`Error`] type works as
+  /// expected.
+  #[test]
+  fn error_debug_impl() {
+    let err = Error(gl::INVALID_VALUE);
+    let s = format!("{err:?}");
+    assert_eq!(s, "OpenGL error: invalid value (0x501)");
+
+    let err = Error(0xfff);
+    let s = format!("{err:?}");
+    assert_eq!(s, "OpenGL error: 0xfff");
   }
 }
