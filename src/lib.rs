@@ -3,24 +3,15 @@
 
 mod framebuffer;
 mod matrices;
-#[cfg(not(target_arch = "wasm32"))]
-mod opengl;
 mod program;
 mod shader;
 mod stack;
 mod texture;
 mod vertices;
-#[cfg(target_arch = "wasm32")]
-mod webgl;
 #[cfg(test)]
 mod winit;
 
-pub mod sys {
-  #[cfg(not(target_arch = "wasm32"))]
-  pub use crate::opengl::*;
-  #[cfg(target_arch = "wasm32")]
-  pub use crate::webgl::*;
-}
+pub mod sys;
 
 pub use crate::framebuffer::Framebuffer;
 pub use crate::matrices::MatrixStack;
