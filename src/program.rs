@@ -8,6 +8,7 @@ use anyhow::Context as _;
 use anyhow::Result;
 
 use crate::sys;
+use crate::sys::Gl as _;
 use crate::Shader;
 
 

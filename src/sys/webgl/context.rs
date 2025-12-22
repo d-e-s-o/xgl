@@ -25,6 +25,10 @@ pub use web_sys::WebGlTexture as Texture;
 pub use web_sys::WebGlUniformLocation as UniformLocation;
 pub use web_sys::WebGlVertexArrayObject as VertexArrayObject;
 
+use crate::sys::BuiltinType;
+use crate::sys::Gl;
+use crate::sys::Sealed;
+
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Error(u32);
@@ -109,7 +113,7 @@ pub enum Primitive {
 }
 
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct ClearMask(u32);
 
 #[expect(non_upper_case_globals)]
@@ -231,18 +235,7 @@ pub enum TextureFilter {
   LinearMipmapLinear = WebGl2RenderingContext::LINEAR_MIPMAP_LINEAR,
 }
 
-
-mod private {
-  pub trait Sealed {}
-
-  impl Sealed for u16 {}
-}
-
-pub trait BuiltinType: private::Sealed {
-  fn as_type() -> Type;
-}
-
-impl BuiltinType for u16 {
+impl BuiltinType<Context> for u16 {
   fn as_type() -> Type {
     Type::UnsignedShort
   }
@@ -261,297 +254,12 @@ impl Context {
     Self(context)
   }
 
-  #[inline]
-  pub fn error(&self) -> Result<(), Error> {
-    let error = self.0.get_error();
-    if error == WebGl2RenderingContext::NO_ERROR {
-      Ok(())
-    } else {
-      Err(Error(error))
-    }
-  }
-
-  #[inline]
-  pub fn enable(&self, capability: Capability) {
-    let () = self.0.enable(capability as _);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn disable(&self, capability: Capability) {
-    let () = self.0.disable(capability as _);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_depth_func(&self, func: Func) {
-    let () = self.0.depth_func(func as _);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_blend_func(&self, src_factor: Factor, dst_factor: Factor) {
-    let () = self.0.blend_func(src_factor as _, dst_factor as _);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_front_face(&self, face: FrontFace) {
-    let () = self.0.front_face(face as _);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_cull_face(&self, face: CullFace) {
-    let () = self.0.cull_face(face as _);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_viewport(&self, x: i32, y: i32, w: i32, h: i32) {
-    let () = self.0.viewport(x, y, w, h);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_clear_color(&self, r: f32, g: f32, b: f32, a: f32) {
-    let () = self.0.clear_color(r, g, b, a);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_pixel_unpack_alignment(&self, alignment: u32) {
-    let () = self
-      .0
-      .pixel_storei(WebGl2RenderingContext::UNPACK_ALIGNMENT, alignment as _);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn clear(&self, mask: ClearMask) {
-    let () = self.0.clear(mask.0);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn draw_arrays(&self, primitive: Primitive, count: i32) {
-    let () = self.0.draw_arrays(primitive as _, 0, count);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn draw_arrays_instanced(&self, primitive: Primitive, count: i32, instance_count: i32) {
-    let () = self
-      .0
-      .draw_arrays_instanced(primitive as _, 0, count, instance_count);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn draw_elements<T>(&self, primitive: Primitive, count: i32)
-  where
-    T: BuiltinType,
-  {
-    let () = self
-      .0
-      .draw_elements_with_i32(primitive as _, count, T::as_type() as _, 0);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn create_framebuffer(&self) -> Result<Framebuffer, Error> {
-    self
-      .0
-      .create_framebuffer()
-      .ok_or_else(|| self.error().unwrap_err())
-  }
-
-  #[inline]
-  pub fn delete_framebuffer(&self, fbo: &Framebuffer) {
-    let () = self.0.delete_framebuffer(Some(fbo));
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn bind_framebuffer(&self, fbo: Option<&Framebuffer>) {
-    let () = self
-      .0
-      .bind_framebuffer(WebGl2RenderingContext::FRAMEBUFFER, fbo);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_framebuffer_depth_texture(&self, texture_target: TextureTarget, texture: &Texture) {
-    let mipmap_level = 0;
-    let () = self.0.framebuffer_texture_2d(
-      WebGl2RenderingContext::FRAMEBUFFER,
-      WebGl2RenderingContext::DEPTH_ATTACHMENT,
-      texture_target as _,
-      Some(texture),
-      mipmap_level,
-    );
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn unset_draw_buffer(&self) {
-    let buffers = JsValue::from(Uint32Array::from([WebGl2RenderingContext::NONE].as_slice()));
-    let () = self.0.draw_buffers(&buffers);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn unset_read_buffer(&self) {
-    let () = self.0.read_buffer(WebGl2RenderingContext::NONE);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn check_framebuffer_status(&self) -> FramebufferStatus {
-    let status = self
-      .0
-      .check_framebuffer_status(WebGl2RenderingContext::FRAMEBUFFER);
-    FramebufferStatus(status)
-  }
-
-  #[inline]
-  pub fn create_shader(&self, ty: ShaderType) -> Option<Shader> {
-    self.0.create_shader(ty as _)
-  }
-
-  #[inline]
-  pub fn delete_shader(&self, shader: &Shader) {
-    let () = self.0.delete_shader(Some(shader));
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_shader_source(&self, shader: &Shader, source: &str) {
-    let () = self.0.shader_source(shader, source);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn compile_shader(&self, shader: &Shader) -> Result<(), Vec<u8>> {
-    let () = self.0.compile_shader(shader);
-    let result = self.0.get_shader_info_log(shader);
-    match result {
-      Some(log) if !log.is_empty() => Err(log.into_bytes()),
-      _ => Ok(()),
-    }
-  }
-
-  #[inline]
-  pub fn attach_shader(&self, program: &Program, shader: &Shader) {
-    let () = self.0.attach_shader(program, shader);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn detach_shader(&self, program: &Program, shader: &Shader) {
-    let () = self.0.detach_shader(program, shader);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn create_program(&self) -> Option<Program> {
-    self.0.create_program()
-  }
-
-  #[inline]
-  pub fn delete_program(&self, program: &Program) {
-    let () = self.0.delete_program(Some(program));
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
   fn check_program(&self, program: &Program) -> Result<(), Vec<u8>> {
     let result = self.0.get_program_info_log(program);
     match result {
       Some(log) if !log.is_empty() => Err(log.into_bytes()),
       _ => Ok(()),
     }
-  }
-
-  pub fn link_program(&self, program: &Program) -> Result<(), Vec<u8>> {
-    let () = self.0.link_program(program);
-    let () = self.check_program(program)?;
-    Ok(())
-  }
-
-  pub fn validate_program(&self, program: &Program) -> Result<(), Vec<u8>> {
-    let () = self.0.validate_program(program);
-    let () = self.check_program(program)?;
-    Ok(())
-  }
-
-  #[inline]
-  pub fn use_program(&self, program: &Program) {
-    let () = self.0.use_program(Some(program));
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn attrib_location(&self, program: &Program, attrib: &str) -> Option<u32> {
-    let idx = self.0.get_attrib_location(program, attrib);
-    if idx >= 0 {
-      Some(u32::try_from(idx).unwrap())
-    } else {
-      None
-    }
-  }
-
-  #[inline]
-  pub fn uniform_location(&self, program: &Program, name: &str) -> Option<UniformLocation> {
-    self.0.get_uniform_location(program, name)
-  }
-
-  #[inline]
-  pub fn uniform_fv<const N: usize>(
-    &self,
-    program: &Program,
-    location: &UniformLocation,
-  ) -> [f32; N] {
-    let value = self.0.get_uniform(program, location);
-    let array = Float32Array::from(value);
-    assert!(array.length() as usize == N);
-
-    let mut result = [0f32; N];
-    let () = array.copy_to(&mut result);
-    result
-  }
-
-  #[inline]
-  pub fn set_uniform_1i(&self, location: &UniformLocation, data: i32) {
-    let () = self.0.uniform1i(Some(location), data);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_uniform_1ui(&self, location: &UniformLocation, data: u32) {
-    let () = self.0.uniform1ui(Some(location), data);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_uniform_1iv(&self, location: &UniformLocation, data: &[i32]) {
-    let () = self.0.uniform1iv_with_i32_array(Some(location), data);
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_uniform_3f(&self, location: &UniformLocation, data: &[f32; 3]) {
-    let () = self
-      .0
-      .uniform3fv_with_f32_array(Some(location), data.as_slice());
-    debug_assert_eq!(self.error(), Ok(()));
-  }
-
-  #[inline]
-  pub fn set_uniform_4f(&self, location: &UniformLocation, data: &[f32; 4]) {
-    let () = self
-      .0
-      .uniform4fv_with_f32_array(Some(location), data.as_slice());
-    debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
@@ -564,19 +272,334 @@ impl Context {
       .uniform_matrix4fv_with_f32_array(Some(location), transpose, matrices);
     debug_assert_eq!(self.error(), Ok(()));
   }
+}
+
+impl Sealed for Context {}
+
+impl Gl for Context {
+  type Error = Error;
+
+  type Capability = Capability;
+  type ClearMask = ClearMask;
+  type CullFace = CullFace;
+  type Factor = Factor;
+  type FramebufferStatus = FramebufferStatus;
+  type FrontFace = FrontFace;
+  type Func = Func;
+  type Primitive = Primitive;
+  type ShaderType = ShaderType;
+  type TextureCompareMode = TextureCompareMode;
+  type TextureFilter = TextureFilter;
+  type TextureFilterType = TextureFilterType;
+  type TextureInternalFormat = TextureInternalFormat;
+  type TexturePixelFormat = TexturePixelFormat;
+  type TextureTarget = TextureTarget;
+  type TextureWrap = TextureWrap;
+  type Type = Type;
+  type VertexBufferTarget = VertexBufferTarget;
+
+  type Framebuffer = Framebuffer;
+  type Program = Program;
+  type Shader = Shader;
+  type Texture = Texture;
+  type VertexArrayObject = VertexArrayObject;
+  type VertexBufferObject = VertexBufferObject;
+
+  type UniformLocation = UniformLocation;
 
   #[inline]
-  pub fn set_uniform_matrices(&self, location: &UniformLocation, matrices: &[[f32; 16]]) {
+  fn error(&self) -> Result<(), Error> {
+    let error = self.0.get_error();
+    if error == WebGl2RenderingContext::NO_ERROR {
+      Ok(())
+    } else {
+      Err(Error(error))
+    }
+  }
+
+  #[inline]
+  fn enable(&self, capability: Capability) {
+    let () = self.0.enable(capability as _);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn disable(&self, capability: Capability) {
+    let () = self.0.disable(capability as _);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_depth_func(&self, func: Func) {
+    let () = self.0.depth_func(func as _);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_blend_func(&self, src_factor: Factor, dst_factor: Factor) {
+    let () = self.0.blend_func(src_factor as _, dst_factor as _);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_front_face(&self, face: FrontFace) {
+    let () = self.0.front_face(face as _);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_cull_face(&self, face: CullFace) {
+    let () = self.0.cull_face(face as _);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_viewport(&self, x: i32, y: i32, w: i32, h: i32) {
+    let () = self.0.viewport(x, y, w, h);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_clear_color(&self, r: f32, g: f32, b: f32, a: f32) {
+    let () = self.0.clear_color(r, g, b, a);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_pixel_unpack_alignment(&self, alignment: u32) {
+    let () = self
+      .0
+      .pixel_storei(WebGl2RenderingContext::UNPACK_ALIGNMENT, alignment as _);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn clear(&self, mask: ClearMask) {
+    let () = self.0.clear(mask.0);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn draw_arrays(&self, primitive: Primitive, count: i32) {
+    let () = self.0.draw_arrays(primitive as _, 0, count);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn draw_arrays_instanced(&self, primitive: Primitive, count: i32, instance_count: i32) {
+    let () = self
+      .0
+      .draw_arrays_instanced(primitive as _, 0, count, instance_count);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn draw_elements<T>(&self, primitive: Primitive, count: i32)
+  where
+    T: BuiltinType<Self>,
+  {
+    let () = self
+      .0
+      .draw_elements_with_i32(primitive as _, count, T::as_type() as _, 0);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn create_framebuffer(&self) -> Result<Framebuffer, Error> {
+    self
+      .0
+      .create_framebuffer()
+      .ok_or_else(|| self.error().unwrap_err())
+  }
+
+  #[inline]
+  fn delete_framebuffer(&self, fbo: &Framebuffer) {
+    let () = self.0.delete_framebuffer(Some(fbo));
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn bind_framebuffer(&self, fbo: Option<&Framebuffer>) {
+    let () = self
+      .0
+      .bind_framebuffer(WebGl2RenderingContext::FRAMEBUFFER, fbo);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_framebuffer_depth_texture(&self, texture_target: TextureTarget, texture: &Texture) {
+    let mipmap_level = 0;
+    let () = self.0.framebuffer_texture_2d(
+      WebGl2RenderingContext::FRAMEBUFFER,
+      WebGl2RenderingContext::DEPTH_ATTACHMENT,
+      texture_target as _,
+      Some(texture),
+      mipmap_level,
+    );
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn unset_draw_buffer(&self) {
+    let buffers = JsValue::from(Uint32Array::from([WebGl2RenderingContext::NONE].as_slice()));
+    let () = self.0.draw_buffers(&buffers);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn unset_read_buffer(&self) {
+    let () = self.0.read_buffer(WebGl2RenderingContext::NONE);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn check_framebuffer_status(&self) -> FramebufferStatus {
+    let status = self
+      .0
+      .check_framebuffer_status(WebGl2RenderingContext::FRAMEBUFFER);
+    FramebufferStatus(status)
+  }
+
+  #[inline]
+  fn create_shader(&self, ty: ShaderType) -> Option<Shader> {
+    self.0.create_shader(ty as _)
+  }
+
+  #[inline]
+  fn delete_shader(&self, shader: &Shader) {
+    let () = self.0.delete_shader(Some(shader));
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_shader_source(&self, shader: &Shader, source: &str) {
+    let () = self.0.shader_source(shader, source);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn compile_shader(&self, shader: &Shader) -> Result<(), Vec<u8>> {
+    let () = self.0.compile_shader(shader);
+    let result = self.0.get_shader_info_log(shader);
+    match result {
+      Some(log) if !log.is_empty() => Err(log.into_bytes()),
+      _ => Ok(()),
+    }
+  }
+
+  #[inline]
+  fn attach_shader(&self, program: &Program, shader: &Shader) {
+    let () = self.0.attach_shader(program, shader);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn detach_shader(&self, program: &Program, shader: &Shader) {
+    let () = self.0.detach_shader(program, shader);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn create_program(&self) -> Option<Program> {
+    self.0.create_program()
+  }
+
+  #[inline]
+  fn delete_program(&self, program: &Program) {
+    let () = self.0.delete_program(Some(program));
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  fn link_program(&self, program: &Program) -> Result<(), Vec<u8>> {
+    let () = self.0.link_program(program);
+    let () = self.check_program(program)?;
+    Ok(())
+  }
+
+  fn validate_program(&self, program: &Program) -> Result<(), Vec<u8>> {
+    let () = self.0.validate_program(program);
+    let () = self.check_program(program)?;
+    Ok(())
+  }
+
+  #[inline]
+  fn use_program(&self, program: &Program) {
+    let () = self.0.use_program(Some(program));
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn attrib_location(&self, program: &Program, attrib: &str) -> Option<u32> {
+    let idx = self.0.get_attrib_location(program, attrib);
+    if idx >= 0 {
+      Some(u32::try_from(idx).unwrap())
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  fn uniform_location(&self, program: &Program, name: &str) -> Option<UniformLocation> {
+    self.0.get_uniform_location(program, name)
+  }
+
+  #[inline]
+  fn uniform_fv<const N: usize>(&self, program: &Program, location: &UniformLocation) -> [f32; N] {
+    let value = self.0.get_uniform(program, location);
+    let array = Float32Array::from(value);
+    assert!(array.length() as usize == N);
+
+    let mut result = [0f32; N];
+    let () = array.copy_to(&mut result);
+    result
+  }
+
+  #[inline]
+  fn set_uniform_1i(&self, location: &UniformLocation, data: i32) {
+    let () = self.0.uniform1i(Some(location), data);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_uniform_1ui(&self, location: &UniformLocation, data: u32) {
+    let () = self.0.uniform1ui(Some(location), data);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_uniform_1iv(&self, location: &UniformLocation, data: &[i32]) {
+    let () = self.0.uniform1iv_with_i32_array(Some(location), data);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_uniform_3f(&self, location: &UniformLocation, data: &[f32; 3]) {
+    let () = self
+      .0
+      .uniform3fv_with_f32_array(Some(location), data.as_slice());
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_uniform_4f(&self, location: &UniformLocation, data: &[f32; 4]) {
+    let () = self
+      .0
+      .uniform4fv_with_f32_array(Some(location), data.as_slice());
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_uniform_matrices(&self, location: &UniformLocation, matrices: &[[f32; 16]]) {
     self.set_uniform_matrices_impl(location, matrices)
   }
 
   #[inline]
-  pub fn set_uniform_matrix(&self, location: &UniformLocation, matrix: &[f32; 16]) {
+  fn set_uniform_matrix(&self, location: &UniformLocation, matrix: &[f32; 16]) {
     self.set_uniform_matrices_impl(location, slice::from_ref(matrix))
   }
 
   #[inline]
-  pub fn create_vertex_buffer(&self) -> Result<VertexBufferObject, Error> {
+  fn create_vertex_buffer(&self) -> Result<VertexBufferObject, Error> {
     self
       .0
       .create_buffer()
@@ -584,22 +607,19 @@ impl Context {
   }
 
   #[inline]
-  pub fn delete_vertex_buffer(&self, vbo: &VertexBufferObject) {
+  fn delete_vertex_buffer(&self, vbo: &VertexBufferObject) {
     let () = self.0.delete_buffer(Some(vbo));
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn bind_vertex_buffer(&self, target: VertexBufferTarget, vbo: Option<&VertexBufferObject>) {
+  fn bind_vertex_buffer(&self, target: VertexBufferTarget, vbo: Option<&VertexBufferObject>) {
     let () = self.0.bind_buffer(target as _, vbo);
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn set_vertex_buffer_data<T>(&self, target: VertexBufferTarget, data: &[T])
-  where
-    T: Sized,
-  {
+  fn set_vertex_buffer_data<T>(&self, target: VertexBufferTarget, data: &[T]) {
     let ptr = data.as_ptr().cast::<u8>();
     let buf = unsafe { slice::from_raw_parts(ptr, size_of_val(data)) };
 
@@ -611,7 +631,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn create_vertex_array(&self) -> Result<VertexArrayObject, Error> {
+  fn create_vertex_array(&self) -> Result<VertexArrayObject, Error> {
     self
       .0
       .create_vertex_array()
@@ -619,25 +639,25 @@ impl Context {
   }
 
   #[inline]
-  pub fn delete_vertex_array(&self, vao: &VertexArrayObject) {
+  fn delete_vertex_array(&self, vao: &VertexArrayObject) {
     let () = self.0.delete_vertex_array(Some(vao));
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn bind_vertex_array(&self, vao: Option<&VertexArrayObject>) {
+  fn bind_vertex_array(&self, vao: Option<&VertexArrayObject>) {
     let () = self.0.bind_vertex_array(vao);
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn enable_vertex_attrib_array(&self, idx: u32) {
+  fn enable_vertex_attrib_array(&self, idx: u32) {
     let () = self.0.enable_vertex_attrib_array(idx);
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn set_vertex_attrib_pointer(
+  fn set_vertex_attrib_pointer(
     &self,
     idx: u32,
     size: i32,
@@ -652,7 +672,7 @@ impl Context {
     debug_assert_eq!(self.error(), Ok(()));
   }
 
-  pub fn create_texture(&self) -> Result<Texture, Error> {
+  fn create_texture(&self) -> Result<Texture, Error> {
     self
       .0
       .create_texture()
@@ -660,19 +680,19 @@ impl Context {
   }
 
   #[inline]
-  pub fn delete_texture(&self, texture: &Texture) {
+  fn delete_texture(&self, texture: &Texture) {
     let () = self.0.delete_texture(Some(texture));
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn bind_texture(&self, target: TextureTarget, texture: Option<&Texture>) {
+  fn bind_texture(&self, target: TextureTarget, texture: Option<&Texture>) {
     let () = self.0.bind_texture(target as _, texture);
     debug_assert_eq!(self.error(), Ok(()));
   }
 
   #[inline]
-  pub fn set_active_texture_unit(&self, unit: u32) {
+  fn set_active_texture_unit(&self, unit: u32) {
     let () = self
       .0
       .active_texture(WebGl2RenderingContext::TEXTURE0 + unit);
@@ -680,7 +700,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn set_texture_image_2d(
+  fn set_texture_image_2d(
     &self,
     target: TextureTarget,
     internal_format: TextureInternalFormat,
@@ -710,7 +730,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn set_texture_image_3d(
+  fn set_texture_image_3d(
     &self,
     target: TextureTarget,
     internal_format: TextureInternalFormat,
@@ -742,7 +762,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn set_texture_sub_image_3d(
+  fn set_texture_sub_image_3d(
     &self,
     target: TextureTarget,
     pixel_format: TexturePixelFormat,
@@ -776,7 +796,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn set_texture_filter(
+  fn set_texture_filter(
     &self,
     target: TextureTarget,
     ty: TextureFilterType,
@@ -787,7 +807,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn set_texture_compare_mode(&self, target: TextureTarget, mode: TextureCompareMode) {
+  fn set_texture_compare_mode(&self, target: TextureTarget, mode: TextureCompareMode) {
     let () = self.0.tex_parameteri(
       target as _,
       WebGl2RenderingContext::TEXTURE_COMPARE_MODE,
@@ -797,7 +817,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn set_texture_compare_func(&self, target: TextureTarget, func: Func) {
+  fn set_texture_compare_func(&self, target: TextureTarget, func: Func) {
     let () = self.0.tex_parameteri(
       target as _,
       WebGl2RenderingContext::TEXTURE_COMPARE_FUNC,
@@ -807,7 +827,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn set_texture_wrap(&self, target: TextureTarget, wrap: TextureWrap) {
+  fn set_texture_wrap(&self, target: TextureTarget, wrap: TextureWrap) {
     let () = self.0.tex_parameteri(
       target as _,
       WebGl2RenderingContext::TEXTURE_WRAP_S,
@@ -822,7 +842,7 @@ impl Context {
   }
 
   #[inline]
-  pub fn generate_mipmaps(&self, target: TextureTarget) {
+  fn generate_mipmaps(&self, target: TextureTarget) {
     let () = self.0.generate_mipmap(target as _);
     debug_assert_eq!(self.error(), Ok(()));
   }
