@@ -55,6 +55,7 @@ impl StdError for Error {}
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum Type {
   Float = WebGl2RenderingContext::FLOAT,
@@ -64,6 +65,7 @@ pub enum Type {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum Capability {
   Blend = WebGl2RenderingContext::BLEND,
@@ -74,6 +76,7 @@ pub enum Capability {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum Func {
   LessOrEqual = WebGl2RenderingContext::LEQUAL,
@@ -82,6 +85,7 @@ pub enum Func {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum Factor {
   SrcAlpha = WebGl2RenderingContext::SRC_ALPHA,
@@ -90,6 +94,7 @@ pub enum Factor {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum FrontFace {
   ClockWise = WebGl2RenderingContext::CW,
@@ -97,6 +102,7 @@ pub enum FrontFace {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum CullFace {
   Back = WebGl2RenderingContext::BACK,
@@ -104,6 +110,7 @@ pub enum CullFace {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Primitive {
   Lines = WebGl2RenderingContext::LINES,
@@ -157,6 +164,7 @@ impl Display for FramebufferStatus {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum ShaderType {
   Fragment = WebGl2RenderingContext::FRAGMENT_SHADER,
@@ -174,6 +182,7 @@ impl ShaderType {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum VertexBufferTarget {
   Array = WebGl2RenderingContext::ARRAY_BUFFER,
@@ -182,6 +191,7 @@ pub enum VertexBufferTarget {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureTarget {
   Texture2D = WebGl2RenderingContext::TEXTURE_2D,
@@ -189,6 +199,7 @@ pub enum TextureTarget {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureInternalFormat {
   Gray8 = WebGl2RenderingContext::R8,
@@ -200,6 +211,7 @@ pub enum TextureInternalFormat {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TexturePixelFormat {
   Gray = WebGl2RenderingContext::RED,
@@ -209,12 +221,14 @@ pub enum TexturePixelFormat {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureCompareMode {
   RefToTexture = WebGl2RenderingContext::COMPARE_REF_TO_TEXTURE,
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureWrap {
   ClampToEdge = WebGl2RenderingContext::CLAMP_TO_EDGE,
@@ -222,6 +236,7 @@ pub enum TextureWrap {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureFilterType {
   Minimize = WebGl2RenderingContext::TEXTURE_MIN_FILTER,
@@ -229,6 +244,7 @@ pub enum TextureFilterType {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureFilter {
   Linear = WebGl2RenderingContext::LINEAR,

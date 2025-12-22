@@ -8,6 +8,7 @@ Unreleased
 - Introduced `VertexArray` and `VertexBuffer` types and associated
   functionality
 - Introduced `Framebuffer` type
+- Made various `enum` types non-exhaustive
 - Renamed `PrimitiveTy` trait to `BuiltinType`
 - Renamed `DrawType` enum to `Primitive`
 

@@ -69,6 +69,7 @@ impl StdError for Error {}
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum Type {
   Float = gl::FLOAT,
@@ -78,6 +79,7 @@ pub enum Type {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum Capability {
   Blend = gl::BLEND,
@@ -90,6 +92,7 @@ pub enum Capability {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum Func {
   LessOrEqual = gl::LEQUAL,
@@ -98,6 +101,7 @@ pub enum Func {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum Factor {
   SrcAlpha = gl::SRC_ALPHA,
@@ -106,6 +110,7 @@ pub enum Factor {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum FrontFace {
   ClockWise = gl::CW,
@@ -113,6 +118,7 @@ pub enum FrontFace {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum CullFace {
   Back = gl::BACK,
@@ -120,6 +126,7 @@ pub enum CullFace {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Primitive {
   Lines = gl::LINES,
@@ -173,6 +180,7 @@ impl Display for FramebufferStatus {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum ShaderType {
   Fragment = gl::FRAGMENT_SHADER,
@@ -190,6 +198,7 @@ impl ShaderType {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum VertexBufferTarget {
   Array = gl::ARRAY_BUFFER,
@@ -198,6 +207,7 @@ pub enum VertexBufferTarget {
 
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureTarget {
   Texture2D = gl::TEXTURE_2D,
@@ -205,6 +215,7 @@ pub enum TextureTarget {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureInternalFormat {
   Gray8 = gl::R8,
@@ -216,6 +227,7 @@ pub enum TextureInternalFormat {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TexturePixelFormat {
   Gray = gl::RED,
@@ -225,12 +237,14 @@ pub enum TexturePixelFormat {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureCompareMode {
   RefToTexture = gl::COMPARE_REF_TO_TEXTURE,
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureWrap {
   ClampToEdge = gl::CLAMP_TO_EDGE,
@@ -238,6 +252,7 @@ pub enum TextureWrap {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureFilterType {
   Minimize = gl::TEXTURE_MIN_FILTER,
@@ -245,6 +260,7 @@ pub enum TextureFilterType {
 }
 
 #[repr(u32)]
+#[non_exhaustive]
 #[derive(Clone, Copy, Debug)]
 pub enum TextureFilter {
   Linear = gl::LINEAR,
