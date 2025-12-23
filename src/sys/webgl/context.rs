@@ -661,6 +661,17 @@ impl Gl for Context {
   }
 
   #[inline]
+  fn set_vertex_buffer_sub_data<T>(&self, target: VertexBufferTarget, data: &[T], offset: i32) {
+    let ptr = data.as_ptr().cast::<u8>();
+    let buf = unsafe { slice::from_raw_parts(ptr, size_of_val(data)) };
+
+    let () = self
+      .0
+      .buffer_sub_data_with_i32_and_u8_array(target as _, offset, buf);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
   fn create_vertex_array(&self) -> Result<VertexArrayObject, Error> {
     self
       .0

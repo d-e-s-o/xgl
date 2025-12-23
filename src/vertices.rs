@@ -269,6 +269,23 @@ where
     Ok(slf)
   }
 
+  /// Update part of the buffer's contents with new data.
+  pub fn update(&self, data: &[T], offset: usize) {
+    debug_assert!(
+      offset + data.len() <= self.count,
+      "{offset} | {} | {}",
+      data.len(),
+      self.count
+    );
+
+    let () = self.bind();
+    let () =
+      self
+        .context
+        .set_vertex_buffer_sub_data(self.target, data, i32::try_from(offset).unwrap());
+    let () = self.unbind();
+  }
+
   #[inline]
   pub fn bind(&self) {
     let () = self

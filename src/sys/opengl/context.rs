@@ -721,6 +721,19 @@ impl Gl for Context {
   }
 
   #[inline]
+  fn set_vertex_buffer_sub_data<T>(&self, target: VertexBufferTarget, data: &[T], offset: i32) {
+    let () = unsafe {
+      gl::BufferSubData(
+        target as _,
+        offset as _,
+        size_of_val(data) as _,
+        data.as_ptr().cast(),
+      )
+    };
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
   fn create_vertex_array(&self) -> Result<VertexArrayObject, Error> {
     let mut vao = 0;
     let () = unsafe { gl::GenVertexArrays(1, &mut vao) };

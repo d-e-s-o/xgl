@@ -140,6 +140,12 @@ pub trait Gl: protected::Sealed {
     usage: Self::VertexBufferUsage,
     data: &[T],
   );
+  fn set_vertex_buffer_sub_data<T>(
+    &self,
+    target: Self::VertexBufferTarget,
+    data: &[T],
+    offset: i32,
+  );
 
   fn create_vertex_array(&self) -> Result<Self::VertexArrayObject, Self::Error>;
   fn delete_vertex_array(&self, vao: &Self::VertexArrayObject);
