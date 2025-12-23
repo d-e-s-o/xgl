@@ -41,6 +41,7 @@ pub trait Gl: protected::Sealed {
   type TextureWrap: Copy + Debug;
   type Type: Copy + Debug;
   type VertexBufferTarget: Copy + Debug;
+  type VertexBufferUsage: Copy + Debug;
 
   // Object types.
   type Framebuffer: Debug;
@@ -133,7 +134,12 @@ pub trait Gl: protected::Sealed {
     target: Self::VertexBufferTarget,
     vbo: Option<&Self::VertexBufferObject>,
   );
-  fn set_vertex_buffer_data<T>(&self, target: Self::VertexBufferTarget, data: &[T]);
+  fn set_vertex_buffer_data<T>(
+    &self,
+    target: Self::VertexBufferTarget,
+    usage: Self::VertexBufferUsage,
+    data: &[T],
+  );
 
   fn create_vertex_array(&self) -> Result<Self::VertexArrayObject, Self::Error>;
   fn delete_vertex_array(&self, vao: &Self::VertexArrayObject);

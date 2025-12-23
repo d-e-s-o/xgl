@@ -224,17 +224,31 @@ where
   T: Sized,
 {
   #[inline]
-  pub fn from_vertices(vertices: &[T], context: &sys::Context) -> Result<Self> {
-    Self::from_data(sys::VertexBufferTarget::Array, vertices, context)
+  pub fn from_vertices(
+    vertices: &[T],
+    usage: sys::VertexBufferUsage,
+    context: &sys::Context,
+  ) -> Result<Self> {
+    Self::from_data(sys::VertexBufferTarget::Array, usage, vertices, context)
   }
 
   #[inline]
-  pub fn from_indices(indices: &[T], context: &sys::Context) -> Result<Self> {
-    Self::from_data(sys::VertexBufferTarget::ElementArray, indices, context)
+  pub fn from_indices(
+    indices: &[T],
+    usage: sys::VertexBufferUsage,
+    context: &sys::Context,
+  ) -> Result<Self> {
+    Self::from_data(
+      sys::VertexBufferTarget::ElementArray,
+      usage,
+      indices,
+      context,
+    )
   }
 
   fn from_data(
     target: sys::VertexBufferTarget,
+    usage: sys::VertexBufferUsage,
     data: &[T],
     context: &sys::Context,
   ) -> Result<Self> {
@@ -250,7 +264,7 @@ where
       _phantom: PhantomData,
     };
     let () = slf.bind();
-    let () = context.set_vertex_buffer_data(target, data);
+    let () = context.set_vertex_buffer_data(target, usage, data);
     let () = slf.unbind();
     Ok(slf)
   }

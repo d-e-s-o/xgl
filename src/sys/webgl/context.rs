@@ -189,6 +189,15 @@ pub enum VertexBufferTarget {
   ElementArray = WebGl2RenderingContext::ELEMENT_ARRAY_BUFFER,
 }
 
+#[repr(u32)]
+#[non_exhaustive]
+#[derive(Clone, Copy, Debug)]
+pub enum VertexBufferUsage {
+  DynamicDraw = WebGl2RenderingContext::DYNAMIC_DRAW,
+  StaticDraw = WebGl2RenderingContext::STATIC_DRAW,
+  StreamDraw = WebGl2RenderingContext::STREAM_DRAW,
+}
+
 
 #[repr(u32)]
 #[non_exhaustive]
@@ -313,6 +322,7 @@ impl Gl for Context {
   type TextureWrap = TextureWrap;
   type Type = Type;
   type VertexBufferTarget = VertexBufferTarget;
+  type VertexBufferUsage = VertexBufferUsage;
 
   type Framebuffer = Framebuffer;
   type Program = Program;
@@ -635,14 +645,18 @@ impl Gl for Context {
   }
 
   #[inline]
-  fn set_vertex_buffer_data<T>(&self, target: VertexBufferTarget, data: &[T]) {
+  fn set_vertex_buffer_data<T>(
+    &self,
+    target: VertexBufferTarget,
+    usage: VertexBufferUsage,
+    data: &[T],
+  ) {
     let ptr = data.as_ptr().cast::<u8>();
     let buf = unsafe { slice::from_raw_parts(ptr, size_of_val(data)) };
 
-    let () =
-      self
-        .0
-        .buffer_data_with_u8_array(target as _, buf, WebGl2RenderingContext::STATIC_DRAW);
+    let () = self
+      .0
+      .buffer_data_with_u8_array(target as _, buf, usage as _);
     debug_assert_eq!(self.error(), Ok(()));
   }
 

@@ -33,6 +33,7 @@ pub use context::UniformLocation;
 pub use context::VertexArrayObject;
 pub use context::VertexBufferObject;
 pub use context::VertexBufferTarget;
+pub use context::VertexBufferUsage;
 
 
 /// Retrieve the OpenGL version to use.

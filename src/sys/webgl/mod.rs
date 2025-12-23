@@ -30,6 +30,7 @@ pub use context::UniformLocation;
 pub use context::VertexArrayObject;
 pub use context::VertexBufferObject;
 pub use context::VertexBufferTarget;
+pub use context::VertexBufferUsage;
 
 
 /// Retrieve the WebGL version to use.

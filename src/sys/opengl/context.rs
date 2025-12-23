@@ -205,6 +205,15 @@ pub enum VertexBufferTarget {
   ElementArray = gl::ELEMENT_ARRAY_BUFFER,
 }
 
+#[repr(u32)]
+#[non_exhaustive]
+#[derive(Clone, Copy, Debug)]
+pub enum VertexBufferUsage {
+  DynamicDraw = gl::DYNAMIC_DRAW,
+  StaticDraw = gl::STATIC_DRAW,
+  StreamDraw = gl::STREAM_DRAW,
+}
+
 
 #[repr(u32)]
 #[non_exhaustive]
@@ -340,6 +349,7 @@ impl Gl for Context {
   type TextureWrap = TextureWrap;
   type Type = Type;
   type VertexBufferTarget = VertexBufferTarget;
+  type VertexBufferUsage = VertexBufferUsage;
 
   type Framebuffer = Framebuffer;
   type Program = Program;
@@ -693,13 +703,18 @@ impl Gl for Context {
   }
 
   #[inline]
-  fn set_vertex_buffer_data<T>(&self, target: VertexBufferTarget, data: &[T]) {
+  fn set_vertex_buffer_data<T>(
+    &self,
+    target: VertexBufferTarget,
+    usage: VertexBufferUsage,
+    data: &[T],
+  ) {
     let () = unsafe {
       gl::BufferData(
         target as _,
         size_of_val(data) as _,
         data.as_ptr().cast(),
-        gl::STATIC_DRAW,
+        usage as _,
       )
     };
     debug_assert_eq!(self.error(), Ok(()));
