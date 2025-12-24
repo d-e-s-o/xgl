@@ -1,5 +1,5 @@
-Unreleased
-----------
+0.2.0
+-----
 - Moved functionality into `sys` module
   - Introduced `sys::Gl` trait defining lowest level interface
 - Introduced `MatrixStack` type
