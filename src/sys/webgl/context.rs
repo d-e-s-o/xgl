@@ -599,6 +599,12 @@ impl Gl for Context {
   }
 
   #[inline]
+  fn set_uniform_1fv(&self, location: &UniformLocation, data: &[f32]) {
+    let () = self.0.uniform1fv_with_f32_array(Some(location), data);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
   fn set_uniform_3f(&self, location: &UniformLocation, data: &[f32; 3]) {
     let () = self
       .0

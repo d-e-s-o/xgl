@@ -122,6 +122,7 @@ pub trait Gl: protected::Sealed {
   fn set_uniform_1i(&self, location: &Self::UniformLocation, data: i32);
   fn set_uniform_1ui(&self, location: &Self::UniformLocation, data: u32);
   fn set_uniform_1iv(&self, location: &Self::UniformLocation, data: &[i32]);
+  fn set_uniform_1fv(&self, location: &Self::UniformLocation, data: &[f32]);
   fn set_uniform_3f(&self, location: &Self::UniformLocation, data: &[f32; 3]);
   fn set_uniform_4f(&self, location: &Self::UniformLocation, data: &[f32; 4]);
   fn set_uniform_matrix(&self, location: &Self::UniformLocation, matrix: &[f32; 16]);
