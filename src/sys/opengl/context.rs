@@ -73,6 +73,7 @@ impl StdError for Error {}
 #[derive(Clone, Copy, Debug)]
 pub enum Type {
   Float = gl::FLOAT,
+  Short = gl::SHORT,
   UnsignedByte = gl::UNSIGNED_BYTE,
   UnsignedShort = gl::UNSIGNED_SHORT,
 }
