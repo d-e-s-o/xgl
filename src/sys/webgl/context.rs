@@ -59,6 +59,7 @@ impl StdError for Error {}
 #[derive(Clone, Copy, Debug)]
 pub enum Type {
   Float = WebGl2RenderingContext::FLOAT,
+  Short = WebGl2RenderingContext::SHORT,
   UnsignedByte = WebGl2RenderingContext::UNSIGNED_BYTE,
   UnsignedShort = WebGl2RenderingContext::UNSIGNED_SHORT,
 }

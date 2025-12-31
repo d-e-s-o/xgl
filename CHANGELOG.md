@@ -1,3 +1,9 @@
+Unreleased
+----------
+- Added `sys::Gl::set_uniform_1fv` method
+- Added `sys::Type::Short` variant
+
+
 0.2.0
 -----
 - Moved functionality into `sys` module
