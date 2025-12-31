@@ -267,7 +267,7 @@ impl BuiltinType<Context> for u16 {
 }
 
 
-/// The OpenGL context in use.
+/// The WebGL context in use.
 ///
 /// A context is guaranteed to be cheaply cloneable.
 #[derive(Clone, Debug)]

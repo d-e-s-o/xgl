@@ -15,7 +15,7 @@ use crate::Shader;
 /// A program object.
 #[derive(Debug)]
 pub struct Program {
-  /// The OpenGL context.
+  /// The GL context.
   context: sys::Context,
   /// The program.
   program: sys::Program,

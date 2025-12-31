@@ -13,7 +13,7 @@ use crate::Texture;
 /// A framebuffer.
 #[derive(Debug)]
 pub struct Framebuffer {
-  /// The OpenGL context.
+  /// The GL context.
   context: sys::Context,
   /// The framebuffer object.
   fbo: sys::Framebuffer,

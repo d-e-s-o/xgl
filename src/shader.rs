@@ -14,14 +14,14 @@ use crate::sys::Gl as _;
 /// A shader object.
 #[derive(Debug)]
 pub struct Shader {
-  /// The OpenGL context.
+  /// The GL context.
   context: sys::Context,
   /// The shader.
   shader: sys::Shader,
 }
 
 impl Shader {
-  /// Retrieve the OpenGL shading language version to use.
+  /// Retrieve the GL shading language version to use.
   ///
   /// We establish the contract of the shading language version being
   /// aligned with the corresponding OpenGL version, though that may not

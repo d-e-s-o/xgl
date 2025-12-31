@@ -87,7 +87,7 @@ fn populate_3d_texture(
 /// Builder infrastructure for a texture.
 #[derive(Debug)]
 pub struct Builder<C = ()> {
-  /// The OpenGL context.
+  /// The GL context.
   context: C,
   /// The texture wrap setting to use.
   wrap: sys::TextureWrap,
@@ -108,7 +108,7 @@ impl Builder<()> {
     self
   }
 
-  /// Set the texture's OpenGL context.
+  /// Set the texture's GL context.
   pub fn set_context(self, context: &sys::Context) -> Builder<sys::Context> {
     let Self {
       context: (),
@@ -182,7 +182,7 @@ impl Builder<sys::Context> {
       texture: self
         .context
         .create_texture()
-        .context("failed to generate OpenGL texture ID")?,
+        .context("failed to generate texture ID")?,
       target,
     };
 
@@ -229,7 +229,7 @@ impl Builder<sys::Context> {
       texture: self
         .context
         .create_texture()
-        .context("failed to generate OpenGL texture ID")?,
+        .context("failed to generate texture ID")?,
       target,
     };
     let () = texture.bind();
@@ -262,7 +262,7 @@ impl Builder<sys::Context> {
       texture: self
         .context
         .create_texture()
-        .context("failed to generate OpenGL texture ID")?,
+        .context("failed to generate texture ID")?,
       target,
     };
     let () = texture.bind();
@@ -327,7 +327,7 @@ impl Default for Builder<()> {
 /// A texture.
 #[derive(Debug)]
 pub struct Texture {
-  /// The OpenGL context.
+  /// The GL context.
   context: sys::Context,
   /// The texture ID.
   texture: sys::Texture,

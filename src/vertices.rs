@@ -207,9 +207,9 @@ impl Attribs for VertexP3fT2fN3f {
 /// A vertex buffer object.
 #[derive(Debug)]
 pub struct VertexBuffer<T> {
-  /// The OpenGL context.
+  /// The GL context.
   context: sys::Context,
-  /// The OpenGL vertex buffer object.
+  /// The vertex buffer object.
   vbo: sys::VertexBufferObject,
   /// The "target" to bind to.
   target: sys::VertexBufferTarget,
@@ -315,9 +315,9 @@ impl<T> Drop for VertexBuffer<T> {
 /// A vertex array object.
 #[derive(Debug)]
 pub struct VertexArray {
-  /// The OpenGL context.
+  /// The GL context.
   context: sys::Context,
-  /// The OpenGL vertex array object.
+  /// The vertex array object.
   vao: sys::VertexArrayObject,
 }
 
