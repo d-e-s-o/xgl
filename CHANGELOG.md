@@ -1,5 +1,5 @@
-Unreleased
-----------
+0.2.1
+-----
 - Added `sys::Gl::set_uniform_1fv` method
 - Added `sys::Type::Short` variant
 
