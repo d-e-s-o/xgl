@@ -660,6 +660,12 @@ impl Gl for Context {
   }
 
   #[inline]
+  fn set_uniform_1fv(&self, location: &UniformLocation, data: &[f32]) {
+    let () = unsafe { gl::Uniform1fv(location.0, data.len() as _, data.as_ptr()) };
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
   fn set_uniform_3f(&self, location: &UniformLocation, data: &[f32; 3]) {
     let () = unsafe { gl::Uniform3fv(location.0, 1, data.as_ptr()) };
     debug_assert_eq!(self.error(), Ok(()));
