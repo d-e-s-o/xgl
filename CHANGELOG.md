@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Added `sys::Gl::set_uniform_4fv` method
+
+
 0.2.1
 -----
 - Added `sys::Gl::set_uniform_1fv` method

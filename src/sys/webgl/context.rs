@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2025-2026 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 use std::error::Error as StdError;
@@ -618,6 +618,13 @@ impl Gl for Context {
     let () = self
       .0
       .uniform4fv_with_f32_array(Some(location), data.as_slice());
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_uniform_4fv(&self, location: &UniformLocation, data: &[[f32; 4]]) {
+    let data = unsafe { slice::from_raw_parts(data.as_ptr().cast::<f32>(), data.len() * 4) };
+    let () = self.0.uniform4fv_with_f32_array(Some(location), data);
     debug_assert_eq!(self.error(), Ok(()));
   }
 
