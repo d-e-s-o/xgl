@@ -259,6 +259,10 @@ pub enum TextureFilterType {
 pub enum TextureFilter {
   Linear = WebGl2RenderingContext::LINEAR,
   LinearMipmapLinear = WebGl2RenderingContext::LINEAR_MIPMAP_LINEAR,
+  LinearMipmapNearest = WebGl2RenderingContext::LINEAR_MIPMAP_NEAREST,
+  Nearest = WebGl2RenderingContext::NEAREST,
+  NearestMipmapLinear = WebGl2RenderingContext::NEAREST_MIPMAP_LINEAR,
+  NearestMipmapNearest = WebGl2RenderingContext::NEAREST_MIPMAP_NEAREST,
 }
 
 impl BuiltinType<Context> for u16 {
