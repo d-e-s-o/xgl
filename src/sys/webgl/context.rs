@@ -214,6 +214,7 @@ pub enum TextureTarget {
 pub enum TextureInternalFormat {
   Gray8 = WebGl2RenderingContext::R8,
   Depth = WebGl2RenderingContext::DEPTH_COMPONENT32F,
+  RG8 = WebGl2RenderingContext::RG8,
   RGB8 = WebGl2RenderingContext::RGB8,
   SRGB8 = WebGl2RenderingContext::SRGB8,
   RGBA8 = WebGl2RenderingContext::RGBA8,
@@ -226,6 +227,7 @@ pub enum TextureInternalFormat {
 pub enum TexturePixelFormat {
   Gray = WebGl2RenderingContext::RED,
   Depth = WebGl2RenderingContext::DEPTH_COMPONENT,
+  RG = WebGl2RenderingContext::RG,
   RGB = WebGl2RenderingContext::RGB,
   RGBA = WebGl2RenderingContext::RGBA,
 }

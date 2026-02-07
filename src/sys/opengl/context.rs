@@ -230,6 +230,7 @@ pub enum TextureTarget {
 pub enum TextureInternalFormat {
   Gray8 = gl::R8,
   Depth = gl::DEPTH_COMPONENT,
+  RG8 = gl::RG8,
   RGB8 = gl::RGB8,
   SRGB8 = gl::SRGB8,
   RGBA8 = gl::RGBA8,
@@ -242,6 +243,7 @@ pub enum TextureInternalFormat {
 pub enum TexturePixelFormat {
   Gray = gl::RED,
   Depth = gl::DEPTH_COMPONENT,
+  RG = gl::RG,
   RGB = gl::RGB,
   RGBA = gl::RGBA,
 }
