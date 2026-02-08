@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2025-2026 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 use std::error::Error as StdError;
@@ -125,6 +125,7 @@ pub trait Gl: protected::Sealed {
   fn set_uniform_1fv(&self, location: &Self::UniformLocation, data: &[f32]);
   fn set_uniform_3f(&self, location: &Self::UniformLocation, data: &[f32; 3]);
   fn set_uniform_4f(&self, location: &Self::UniformLocation, data: &[f32; 4]);
+  fn set_uniform_4fv(&self, location: &Self::UniformLocation, data: &[[f32; 4]]);
   fn set_uniform_matrix(&self, location: &Self::UniformLocation, matrix: &[f32; 16]);
   fn set_uniform_matrices(&self, location: &Self::UniformLocation, matrices: &[[f32; 16]]);
 
