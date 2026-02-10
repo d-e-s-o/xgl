@@ -2,6 +2,8 @@ Unreleased
 ----------
 - Added `sys::Gl::set_uniform_4fv` method
 - Added additional `sys::TextureFilter` variants
+- Added `sys::TextureInternalFormat::RG8` and
+  `sys::TexturePixelFormat::RG` variants
 
 
 0.2.1
