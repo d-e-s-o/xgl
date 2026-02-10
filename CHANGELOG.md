@@ -1,6 +1,7 @@
 Unreleased
 ----------
 - Added `sys::Gl::set_uniform_4fv` method
+- Added additional `sys::TextureFilter` variants
 
 
 0.2.1

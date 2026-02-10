@@ -275,6 +275,10 @@ pub enum TextureFilterType {
 pub enum TextureFilter {
   Linear = gl::LINEAR,
   LinearMipmapLinear = gl::LINEAR_MIPMAP_LINEAR,
+  LinearMipmapNearest = gl::LINEAR_MIPMAP_NEAREST,
+  Nearest = gl::NEAREST,
+  NearestMipmapLinear = gl::NEAREST_MIPMAP_LINEAR,
+  NearestMipmapNearest = gl::NEAREST_MIPMAP_NEAREST,
 }
 
 
