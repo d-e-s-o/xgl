@@ -588,6 +588,12 @@ impl Gl for Context {
   }
 
   #[inline]
+  fn set_uniform_1f(&self, location: &UniformLocation, data: f32) {
+    let () = self.0.uniform1f(Some(location), data);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
   fn set_uniform_1i(&self, location: &UniformLocation, data: i32) {
     let () = self.0.uniform1i(Some(location), data);
     debug_assert_eq!(self.error(), Ok(()));

@@ -649,6 +649,12 @@ impl Gl for Context {
   }
 
   #[inline]
+  fn set_uniform_1f(&self, location: &UniformLocation, data: f32) {
+    let () = unsafe { gl::Uniform1f(location.0, data) };
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
   fn set_uniform_1i(&self, location: &UniformLocation, data: i32) {
     let () = unsafe { gl::Uniform1i(location.0, data) };
     debug_assert_eq!(self.error(), Ok(()));
