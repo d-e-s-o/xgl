@@ -123,6 +123,7 @@ pub enum FrontFace {
 #[derive(Clone, Copy, Debug)]
 pub enum CullFace {
   Back = gl::BACK,
+  Front = gl::FRONT,
 }
 
 

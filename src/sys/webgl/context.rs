@@ -107,6 +107,7 @@ pub enum FrontFace {
 #[derive(Clone, Copy, Debug)]
 pub enum CullFace {
   Back = WebGl2RenderingContext::BACK,
+  Front = WebGl2RenderingContext::FRONT,
 }
 
 

@@ -1,6 +1,7 @@
 Unreleased
 ----------
 - Added `sys::Gl::set_uniform_1f` method
+- Added `sys::CullFace::Front` variant
 
 
 0.2.2
