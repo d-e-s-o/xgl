@@ -2,6 +2,7 @@ Unreleased
 ----------
 - Added `sys::Gl::set_uniform_1f` method
 - Added `sys::CullFace::Front` variant
+- Added `sys::FrontFace::CounterClockWise` variant
 
 
 0.2.2

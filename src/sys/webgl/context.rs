@@ -99,6 +99,7 @@ pub enum Factor {
 #[derive(Clone, Copy, Debug)]
 pub enum FrontFace {
   ClockWise = WebGl2RenderingContext::CW,
+  CounterClockWise = WebGl2RenderingContext::CCW,
 }
 
 

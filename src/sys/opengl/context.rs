@@ -115,6 +115,7 @@ pub enum Factor {
 #[derive(Clone, Copy, Debug)]
 pub enum FrontFace {
   ClockWise = gl::CW,
+  CounterClockWise = gl::CCW,
 }
 
 
