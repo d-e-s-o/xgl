@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2025-2026 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 use std::iter::once;
@@ -372,5 +372,37 @@ impl Drop for Texture {
   #[inline]
   fn drop(&mut self) {
     let () = self.context.delete_texture(&self.texture);
+  }
+}
+
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  use test_fork::fork;
+
+  use crate::winit::with_opengl_context;
+
+
+  /// Check that we can create a [`Texture`] object.
+  #[fork]
+  #[test]
+  fn texture_creation() {
+    with_opengl_context(|| {
+      let gl_context = sys::Context::default();
+      let data = [0x00; 4];
+      let info = TextureInfo {
+        width: 1,
+        height: 1,
+        intern_format: sys::TextureInternalFormat::RGBA8,
+        pixel_format: sys::TexturePixelFormat::RGBA,
+        color_format: sys::Type::UnsignedByte,
+      };
+      let _texture = Texture::builder()
+        .set_context(&gl_context)
+        .from_image(&data, &info)
+        .unwrap();
+    })
   }
 }
