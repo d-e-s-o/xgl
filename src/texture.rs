@@ -39,7 +39,7 @@ impl AsRef<Self> for TextureInfo {
 fn populate_texture(
   context: &sys::Context,
   target: sys::TextureTarget,
-  data: &[u8],
+  data: Option<&[u8]>,
   info: &TextureInfo,
 ) -> Result<()> {
   let () = context
@@ -50,7 +50,7 @@ fn populate_texture(
       info.color_format,
       info.width,
       info.height,
-      Some(data),
+      data,
     )
     .context("failed to populate texture")?;
 
@@ -185,6 +185,14 @@ impl Builder<sys::Context> {
         .context("failed to generate texture ID")?,
       target,
     };
+    let info = TextureInfo {
+      width,
+      height,
+      intern_format: sys::TextureInternalFormat::Depth,
+      pixel_format: sys::TexturePixelFormat::Depth,
+      color_format: sys::Type::Float,
+    };
+    let data = None;
 
     let () = texture.bind();
     let () = self.apply_pre_texture_state(&texture);
@@ -198,19 +206,7 @@ impl Builder<sys::Context> {
       .context
       .set_texture_compare_func(target, sys::Func::Greater);
 
-    let result = self
-      .context
-      .set_texture_image_2d(
-        target,
-        sys::TextureInternalFormat::Depth,
-        sys::TexturePixelFormat::Depth,
-        sys::Type::Float,
-        width,
-        height,
-        None,
-      )
-      .context("failed to depth map texture");
-
+    let result = populate_texture(&self.context, target, data, &info);
     if let Ok(()) = result {
       let () = self.apply_post_texture_state(&texture);
     }
@@ -234,7 +230,7 @@ impl Builder<sys::Context> {
     };
     let () = texture.bind();
     let () = self.apply_pre_texture_state(&texture);
-    let result = populate_texture(&self.context, target, data, info);
+    let result = populate_texture(&self.context, target, Some(data), info);
     if let Ok(()) = result {
       let () = self.apply_post_texture_state(&texture);
     }
