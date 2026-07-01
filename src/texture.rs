@@ -174,6 +174,29 @@ impl Builder<sys::Context> {
     }
   }
 
+  fn new_impl(&self, data: Option<&[u8]>, info: &TextureInfo) -> Result<Texture> {
+    let target = sys::TextureTarget::Texture2D;
+
+    let texture = Texture {
+      context: self.context.clone(),
+      texture: self
+        .context
+        .create_texture()
+        .context("failed to generate texture ID")?,
+      target,
+    };
+    let () = texture.bind();
+    let () = self.apply_pre_texture_state(&texture);
+    let result = populate_texture(&self.context, target, data, info);
+    if let Ok(()) = result {
+      let () = self.apply_post_texture_state(&texture);
+    }
+    let () = texture.unbind();
+
+    let () = result?;
+    Ok(texture)
+  }
+
   /// Create a new 2D `Texture` suitable for use as a depth map.
   pub fn new_depth_map(&self, width: u32, height: u32) -> Result<Texture> {
     let target = sys::TextureTarget::Texture2D;
@@ -218,26 +241,7 @@ impl Builder<sys::Context> {
 
   /// Create a new 2D `Texture` from the provided image data.
   pub fn from_image(&self, data: &[u8], info: &TextureInfo) -> Result<Texture> {
-    let target = sys::TextureTarget::Texture2D;
-
-    let texture = Texture {
-      context: self.context.clone(),
-      texture: self
-        .context
-        .create_texture()
-        .context("failed to generate texture ID")?,
-      target,
-    };
-    let () = texture.bind();
-    let () = self.apply_pre_texture_state(&texture);
-    let result = populate_texture(&self.context, target, Some(data), info);
-    if let Ok(()) = result {
-      let () = self.apply_post_texture_state(&texture);
-    }
-    let () = texture.unbind();
-
-    let () = result?;
-    Ok(texture)
+    self.new_impl(Some(data), info)
   }
 
   /// Create a new 3D `Texture` using the provided images.
