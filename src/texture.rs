@@ -197,6 +197,11 @@ impl Builder<sys::Context> {
     Ok(texture)
   }
 
+  /// Create a new empty 2D `Texture`.
+  pub fn empty(&self, info: &TextureInfo) -> Result<Texture> {
+    self.new_impl(None, info)
+  }
+
   /// Create a new 2D `Texture` suitable for use as a depth map.
   pub fn new_depth_map(&self, width: u32, height: u32) -> Result<Texture> {
     let target = sys::TextureTarget::Texture2D;
@@ -385,10 +390,31 @@ mod tests {
   use crate::winit::with_opengl_context;
 
 
-  /// Check that we can create a [`Texture`] object.
+  /// Check that we can create an empty [`Texture`] object.
   #[fork]
   #[test]
-  fn texture_creation() {
+  fn texture_creation_empty() {
+    with_opengl_context(|| {
+      let gl_context = sys::Context::default();
+      let info = TextureInfo {
+        width: 32,
+        height: 32,
+        intern_format: sys::TextureInternalFormat::RGB8,
+        pixel_format: sys::TexturePixelFormat::RGB,
+        color_format: sys::Type::Float,
+      };
+      let _texture = Texture::builder()
+        .set_context(&gl_context)
+        .empty(&info)
+        .unwrap();
+    })
+  }
+
+  /// Check that we can create a [`Texture`] object given some dummy
+  /// image data.
+  #[fork]
+  #[test]
+  fn texture_creation_dummy() {
     with_opengl_context(|| {
       let gl_context = sys::Context::default();
       let data = [0x00; 4];
