@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2025-2026 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 use anyhow::ensure;
@@ -31,7 +31,8 @@ impl Framebuffer {
     };
 
     let () = slf.bind();
-    let () = context.set_framebuffer_depth_texture(texture.target(), texture);
+    let () =
+      context.set_framebuffer_texture(sys::FramebufferAttachment::Depth, texture.target(), texture);
     // Make it clear to OpenGL that we don't intend to use this
     // framebuffer for anything related to color.
     let () = context.unset_draw_buffer();

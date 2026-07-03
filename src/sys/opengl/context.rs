@@ -167,6 +167,15 @@ impl BitOrAssign for ClearMask {
 }
 
 
+#[repr(u32)]
+#[non_exhaustive]
+#[derive(Clone, Copy, Debug)]
+pub enum FramebufferAttachment {
+  Color = gl::COLOR_ATTACHMENT0,
+  Depth = gl::DEPTH_ATTACHMENT,
+}
+
+
 #[derive(Debug, Eq, PartialEq)]
 pub struct FramebufferStatus(u32);
 
@@ -344,6 +353,7 @@ impl Gl for Context {
   type ClearMask = ClearMask;
   type CullFace = CullFace;
   type Factor = Factor;
+  type FramebufferAttachment = FramebufferAttachment;
   type FramebufferStatus = FramebufferStatus;
   type FrontFace = FrontFace;
   type Func = Func;
@@ -482,12 +492,17 @@ impl Gl for Context {
   }
 
   #[inline]
-  fn set_framebuffer_depth_texture(&self, texture_target: TextureTarget, texture: &Texture) {
+  fn set_framebuffer_texture(
+    &self,
+    attachment: FramebufferAttachment,
+    texture_target: TextureTarget,
+    texture: &Texture,
+  ) {
     let mipmap_level = 0;
     let () = unsafe {
       gl::FramebufferTexture2D(
         gl::FRAMEBUFFER,
-        gl::DEPTH_ATTACHMENT,
+        attachment as _,
         texture_target as _,
         texture.0,
         mipmap_level,

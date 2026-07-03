@@ -1,5 +1,8 @@
 Unreleased
 ----------
+- Changed `sys::Gl::set_framebuffer_depth_texture` to
+  `sys::Gl::set_framebuffer_texture` accepting
+  `sys::FramebufferAttachment` enum
 - Added `TextureBuilder::empty` constructor
 - Added `sys::Gl::set_uniform_1f` method
 - Added `sys::CullFace::Front` variant
