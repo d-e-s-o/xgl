@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2025-2026 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 #[expect(clippy::undocumented_unsafe_blocks)]
@@ -10,6 +10,7 @@ pub use context::Context;
 pub use context::CullFace;
 pub use context::Factor;
 pub use context::Framebuffer;
+pub use context::FramebufferAttachment;
 pub use context::FramebufferStatus;
 pub use context::FrontFace;
 pub use context::Func;

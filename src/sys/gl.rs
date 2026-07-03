@@ -28,6 +28,7 @@ pub trait Gl: protected::Sealed {
   type ClearMask: Copy + Debug;
   type CullFace: Copy + Debug;
   type Factor: Copy + Debug;
+  type FramebufferAttachment: Copy + Debug;
   type FrontFace: Copy + Debug;
   type Func: Copy + Debug;
   type Primitive: Copy + Debug + Eq;
@@ -84,8 +85,9 @@ pub trait Gl: protected::Sealed {
   fn bind_framebuffer(&self, fbo: Option<&Self::Framebuffer>);
 
   fn check_framebuffer_status(&self) -> Self::FramebufferStatus;
-  fn set_framebuffer_depth_texture(
+  fn set_framebuffer_texture(
     &self,
+    attachment: Self::FramebufferAttachment,
     texture_target: Self::TextureTarget,
     texture: &Self::Texture,
   );

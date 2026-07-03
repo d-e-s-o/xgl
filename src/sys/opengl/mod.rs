@@ -13,6 +13,7 @@ pub use context::Context;
 pub use context::CullFace;
 pub use context::Factor;
 pub use context::Framebuffer;
+pub use context::FramebufferAttachment;
 pub use context::FramebufferStatus;
 pub use context::FrontFace;
 pub use context::Func;
