@@ -3,6 +3,8 @@ Unreleased
 - Introduced `sys::FramebufferAttachment` enum
 - Changed `sys::Gl::set_framebuffer_depth_texture` to
   `sys::Gl::set_framebuffer_texture`
+- Removed `Framebuffer::with_depth_map` constructor in favor of
+  new `Framebuffer::builder` infrastructure
 - Added `TextureBuilder::empty` constructor
 - Added `sys::Gl::set_uniform_1f` method
 - Added `sys::CullFace::Front` variant

@@ -13,6 +13,7 @@ mod winit;
 
 pub mod sys;
 
+pub use crate::framebuffer::Builder as FramebufferBuilder;
 pub use crate::framebuffer::Framebuffer;
 pub use crate::matrices::MatrixStack;
 pub use crate::program::Program;
