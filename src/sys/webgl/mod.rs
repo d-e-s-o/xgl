@@ -16,6 +16,7 @@ pub use context::FrontFace;
 pub use context::Func;
 pub use context::Primitive;
 pub use context::Program;
+pub use context::Renderbuffer;
 pub use context::Shader;
 pub use context::ShaderType;
 pub use context::Texture;
