@@ -7,6 +7,7 @@ use anyhow::Result;
 
 use crate::sys;
 use crate::sys::Gl as _;
+use crate::Renderbuffer;
 use crate::Texture;
 
 
@@ -15,11 +16,18 @@ use crate::Texture;
 #[derive(Debug)]
 pub enum Attachment<'attchmt> {
   Texture(&'attchmt Texture),
+  Renderbuffer(&'attchmt Renderbuffer),
 }
 
 impl<'attchmt> From<&'attchmt Texture> for Attachment<'attchmt> {
   fn from(texture: &'attchmt Texture) -> Self {
     Self::Texture(texture)
+  }
+}
+
+impl<'attchmt> From<&'attchmt Renderbuffer> for Attachment<'attchmt> {
+  fn from(rbo: &'attchmt Renderbuffer) -> Self {
+    Self::Renderbuffer(rbo)
   }
 }
 
@@ -37,6 +45,9 @@ fn configure_framebuffer(
         texture.target(),
         texture,
       ),
+      Attachment::Renderbuffer(rbo) => {
+        context.set_framebuffer_renderbuffer(sys::FramebufferAttachment::Color, rbo)
+      },
     }
   }
 
@@ -48,6 +59,9 @@ fn configure_framebuffer(
           texture.target(),
           texture,
         );
+      },
+      Attachment::Renderbuffer(rbo) => {
+        context.set_framebuffer_renderbuffer(sys::FramebufferAttachment::Depth, rbo)
       },
     }
   }
@@ -161,10 +175,26 @@ mod tests {
   use crate::winit::with_opengl_context;
 
 
-  /// Check that we can create a framebuffer object.
+  /// Check that we can create a framebuffer object using a render
+  /// buffer.
   #[fork]
   #[test]
-  fn framebuffer_creation() {
+  fn framebuffer_creation_color() {
+    with_opengl_context(|| {
+      let gl_context = sys::Context::default();
+      let rbo = Renderbuffer::new(sys::TextureInternalFormat::RGB8, 128, 128, &gl_context).unwrap();
+      let _framebuffer = Framebuffer::builder()
+        .set_color_attachment(&rbo)
+        .build(&gl_context)
+        .unwrap();
+    })
+  }
+
+  /// Check that we can create a framebuffer object for a depth map
+  /// texture.
+  #[fork]
+  #[test]
+  fn framebuffer_creation_depth() {
     with_opengl_context(|| {
       let gl_context = sys::Context::default();
       let depth_map = Texture::builder()

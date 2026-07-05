@@ -92,6 +92,11 @@ pub trait Gl: protected::Sealed {
     texture_target: Self::TextureTarget,
     texture: &Self::Texture,
   );
+  fn set_framebuffer_renderbuffer(
+    &self,
+    attachment: Self::FramebufferAttachment,
+    rbo: &Self::Renderbuffer,
+  );
 
   fn unset_draw_buffer(&self);
   fn unset_read_buffer(&self);

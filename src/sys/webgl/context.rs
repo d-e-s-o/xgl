@@ -492,6 +492,21 @@ impl Gl for Context {
   }
 
   #[inline]
+  fn set_framebuffer_renderbuffer(
+    &self,
+    attachment: Self::FramebufferAttachment,
+    rbo: &Self::Renderbuffer,
+  ) {
+    let () = self.0.framebuffer_renderbuffer(
+      WebGl2RenderingContext::FRAMEBUFFER,
+      attachment as _,
+      WebGl2RenderingContext::RENDERBUFFER,
+      Some(rbo),
+    );
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
   fn unset_draw_buffer(&self) {
     let buffers = JsValue::from(Uint32Array::from([WebGl2RenderingContext::NONE].as_slice()));
     let () = self.0.draw_buffers(&buffers);
