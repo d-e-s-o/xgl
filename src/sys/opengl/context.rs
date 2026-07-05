@@ -516,6 +516,18 @@ impl Gl for Context {
   }
 
   #[inline]
+  fn set_framebuffer_renderbuffer(
+    &self,
+    attachment: Self::FramebufferAttachment,
+    rbo: &Self::Renderbuffer,
+  ) {
+    let () = unsafe {
+      gl::FramebufferRenderbuffer(gl::FRAMEBUFFER, attachment as _, gl::RENDERBUFFER, rbo.0)
+    };
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
   fn unset_draw_buffer(&self) {
     let () = unsafe { gl::DrawBuffer(gl::NONE) };
     debug_assert_eq!(self.error(), Ok(()));

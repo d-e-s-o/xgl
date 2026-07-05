@@ -2,6 +2,7 @@ Unreleased
 ----------
 - Introduced `Framebuffer::builder` infrastructure
   - Removed `Framebuffer::with_depth_map` constructor
+  - Introduced `Renderbuffer` type as possible `Framebuffer` attachment
 - Changed `sys::Gl::set_framebuffer_depth_texture` to
   `sys::Gl::set_framebuffer_texture` accepting
   `sys::FramebufferAttachment` enum
