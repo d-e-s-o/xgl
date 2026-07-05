@@ -20,6 +20,7 @@ use web_sys::WebGl2RenderingContext;
 pub use web_sys::WebGlBuffer as VertexBufferObject;
 pub use web_sys::WebGlFramebuffer as Framebuffer;
 pub use web_sys::WebGlProgram as Program;
+pub use web_sys::WebGlRenderbuffer as Renderbuffer;
 pub use web_sys::WebGlShader as Shader;
 pub use web_sys::WebGlTexture as Texture;
 pub use web_sys::WebGlUniformLocation as UniformLocation;
@@ -344,6 +345,7 @@ impl Gl for Context {
   type VertexBufferUsage = VertexBufferUsage;
 
   type Framebuffer = Framebuffer;
+  type Renderbuffer = Renderbuffer;
   type Program = Program;
   type Shader = Shader;
   type Texture = Texture;
@@ -508,6 +510,45 @@ impl Gl for Context {
       .0
       .check_framebuffer_status(WebGl2RenderingContext::FRAMEBUFFER);
     FramebufferStatus(status)
+  }
+
+  #[inline]
+  fn create_renderbuffer(&self) -> Result<Renderbuffer, Error> {
+    self
+      .0
+      .create_renderbuffer()
+      .ok_or_else(|| self.error().unwrap_err())
+  }
+
+  #[inline]
+  fn delete_renderbuffer(&self, rbo: &Renderbuffer) {
+    let () = self.0.delete_renderbuffer(Some(rbo));
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn bind_renderbuffer(&self, rbo: Option<&Renderbuffer>) {
+    let () = self
+      .0
+      .bind_renderbuffer(WebGl2RenderingContext::RENDERBUFFER, rbo);
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_renderbuffer_storage(
+    &self,
+    format: Self::TextureInternalFormat,
+    w: u32,
+    h: u32,
+  ) -> Result<(), Self::Error> {
+    let w = i32::try_from(w).unwrap();
+    let h = i32::try_from(h).unwrap();
+
+    let () = self
+      .0
+      .renderbuffer_storage(WebGl2RenderingContext::RENDERBUFFER, format as _, w, h);
+    let () = self.error()?;
+    Ok(())
   }
 
   #[inline]

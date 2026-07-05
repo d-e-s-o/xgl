@@ -30,6 +30,9 @@ pub struct Shader(u32);
 pub struct Framebuffer(u32);
 
 #[derive(Debug)]
+pub struct Renderbuffer(u32);
+
+#[derive(Debug)]
 pub struct Texture(u32);
 
 #[derive(Debug)]
@@ -371,6 +374,7 @@ impl Gl for Context {
   type VertexBufferUsage = VertexBufferUsage;
 
   type Framebuffer = Framebuffer;
+  type Renderbuffer = Renderbuffer;
   type Program = Program;
   type Shader = Shader;
   type Texture = Texture;
@@ -527,6 +531,39 @@ impl Gl for Context {
   fn check_framebuffer_status(&self) -> FramebufferStatus {
     let status = unsafe { gl::CheckFramebufferStatus(gl::FRAMEBUFFER) };
     FramebufferStatus(status)
+  }
+
+  #[inline]
+  fn create_renderbuffer(&self) -> Result<Renderbuffer, Error> {
+    let mut rbo = 0;
+    let () = unsafe { gl::GenRenderbuffers(1, &mut rbo) };
+    let () = self.error()?;
+    Ok(Renderbuffer(rbo))
+  }
+
+  #[inline]
+  fn delete_renderbuffer(&self, rbo: &Renderbuffer) {
+    let () = unsafe { gl::DeleteRenderbuffers(1, &rbo.0) };
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn bind_renderbuffer(&self, rbo: Option<&Renderbuffer>) {
+    let rbo = rbo.map(|rbo| rbo.0).unwrap_or(0);
+    let () = unsafe { gl::BindRenderbuffer(gl::RENDERBUFFER, rbo) };
+    debug_assert_eq!(self.error(), Ok(()));
+  }
+
+  #[inline]
+  fn set_renderbuffer_storage(
+    &self,
+    format: Self::TextureInternalFormat,
+    w: u32,
+    h: u32,
+  ) -> Result<(), Self::Error> {
+    let () = unsafe { gl::RenderbufferStorage(gl::RENDERBUFFER, format as _, w as _, h as _) };
+    let () = self.error()?;
+    Ok(())
   }
 
   #[inline]

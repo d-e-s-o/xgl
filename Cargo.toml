@@ -31,6 +31,7 @@ web-sys = {version = "0.3", default-features = false, features=[
   "WebGlBuffer",
   "WebGlFramebuffer",
   "WebGlProgram",
+  "WebGlRenderbuffer",
   "WebGlShader",
   "WebGlTexture",
   "WebGlUniformLocation",

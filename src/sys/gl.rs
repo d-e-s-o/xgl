@@ -46,6 +46,7 @@ pub trait Gl: protected::Sealed {
 
   // Object types.
   type Framebuffer: Debug;
+  type Renderbuffer: Debug;
   type Program: Debug;
   type Shader: Debug;
   type Texture: Debug;
@@ -94,6 +95,16 @@ pub trait Gl: protected::Sealed {
 
   fn unset_draw_buffer(&self);
   fn unset_read_buffer(&self);
+
+  fn create_renderbuffer(&self) -> Result<Self::Renderbuffer, Self::Error>;
+  fn delete_renderbuffer(&self, rbo: &Self::Renderbuffer);
+  fn bind_renderbuffer(&self, rbo: Option<&Self::Renderbuffer>);
+  fn set_renderbuffer_storage(
+    &self,
+    format: Self::TextureInternalFormat,
+    w: u32,
+    h: u32,
+  ) -> Result<(), Self::Error>;
 
   fn create_shader(&self, ty: Self::ShaderType) -> Option<Self::Shader>;
   fn delete_shader(&self, shader: &Self::Shader);
