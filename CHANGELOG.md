@@ -7,6 +7,7 @@ Unreleased
   `sys::Gl::set_framebuffer_texture` accepting
   `sys::FramebufferAttachment` enum
 - Added `TextureBuilder::empty` constructor
+- Added `VertexArray::empty` constructor
 - Added `sys::Gl::set_uniform_1f` method
 - Added `sys::CullFace::Front` variant
 - Added `sys::FrontFace::CounterClockWise` variant
