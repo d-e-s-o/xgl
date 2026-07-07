@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2025-2026 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 use std::fmt::Display;
@@ -330,10 +330,9 @@ impl VertexArray {
   where
     V: Attribs,
   {
-    let vertex_array = context.create_vertex_array()?;
     let slf = Self {
       context: context.clone(),
-      vao: vertex_array,
+      vao: context.create_vertex_array()?,
     };
     let () = slf.bind();
     let () = vertex_buffer.bind();
@@ -360,6 +359,16 @@ impl VertexArray {
     let () = slf.unbind();
 
     result.map(|()| slf)
+  }
+
+  /// Create an empty vertex array.
+  pub fn empty(context: &sys::Context) -> Result<Self> {
+    let slf = Self {
+      vao: context.create_vertex_array()?,
+      context: context.clone(),
+    };
+
+    Ok(slf)
   }
 
   #[inline]
