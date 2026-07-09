@@ -1,5 +1,5 @@
-Unreleased
-----------
+0.3.0
+-----
 - Introduced `Framebuffer::builder` infrastructure
   - Removed `Framebuffer::with_depth_map` constructor
   - Introduced `Renderbuffer` type as possible `Framebuffer` attachment
